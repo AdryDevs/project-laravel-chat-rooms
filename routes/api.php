@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,43 +21,30 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('/register',[AuthController::class, 'register']);
-Route::post('/login',[AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-//Auth routes
-
+// AUTH
 Route::group([
     'middleware' => 'jwt.auth'
-], function (){
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/profile', [AuthController::class, 'profile']);      
-    });
+], function () {
+    // Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'profile']);
+});
 
-// User routes
 
+// USERS
 Route::group([
     'middleware' => ['jwt.auth', 'isSuperAdmin']
 ], function () {
-    Route::get('/users/all', [UserController::class, 'showAllUsers']);
-    Route::get('/users/{id}', [UserController::class, 'showUserById']);
-    Route::post('/users/create', [UserController::class, 'createNewUser']);
-    Route::put('/users/{id}', [UserController::class, 'updateUserById']);
-    Route::delete('/users/{id}', [UserController::class, 'deleteUserById']);
+    Route::post('/add_super_admin_role/{id}', [UserController::class, 'addSuperAdminRoleByIdUser']);
 });
 
-// Room routes
-
+// BOOKS
 Route::group([
-    'middleware' => ['jwt.auth', 'isAdmin' || 'isSuperAdmin']
+    'middleware' => ['jwt.auth']
 ], function () {
-    Route::get('/rooms/all', [RoomController::class, 'showAllRooms']);
-    Route::get('/rooms/{id}', [RoomController::class, 'showRoomById']);
-    Route::post('/rooms/create', [RoomController::class, 'createNewRoom']);
-    Route::put('/rooms/{id}', [RoomController::class, 'updateRoomById']);
-    Route::delete('/rooms/{id}', [RoomController::class, 'deleteRoomById']);
+    Route::post('/books', [BookController::class, 'createBook']);
+    Route::put('/books/{id}', [BookController::class, 'updateBook']);
+    Route::get('/books', [BookController::class, 'getAllBooks']);
 });
-
-
-
-
-

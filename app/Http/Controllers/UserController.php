@@ -8,36 +8,35 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    const SUPER_ADMIN_ROLE = 1;
-    const ADMIN_ROLE = 2;
-    const USER_ROLE = 3;
+    const SUPER_ADMIN_ROLE_ID = 3;
 
-    public function addSuperAdminRoleByIdUser($id){
-
+    public function addSuperAdminRoleByIdUser($id)
+    {
         try {
-            $userId = $id;
+            $userId = $id; 
             $user = User::find($userId);
 
-            if(!$user){
+            if(!$user) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'User not found'
+                    'success' => true,
+                    'message' => 'No existe usuario.'
                 ], 404);
             }
 
-            $user->roles()->attach(self::SUPER_ADMIN_ROLE);
+            $user->roles()->attach(self::SUPER_ADMIN_ROLE_ID);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Super Admin role added successfully'
+                'message' => 'Se ha añadido el role al usuario'
             ], 200);
         } catch (\Throwable $th) {
-            Log::error("Error adding super admin role to user: " . $th->getMessage());
+            Log::error("Error add super admin role: ".$th->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error adding super admin role to user'
+                'message' => 'Ups, ha ocurrido un error'
             ], 500);
         }
     }
 }
+

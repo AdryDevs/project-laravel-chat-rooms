@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -47,6 +48,11 @@ class User extends Authenticatable
         return $this->getKey();
     }
 
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
     public function getJWTCustomClaims()
     {
         return [];
@@ -57,9 +63,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function rooms()
+    public function books()
     {
-        return $this->belongsToMany(GameRoom::class, 'users_rooms');
+        return $this->hasMany(Book::class);
     }
-
 }
