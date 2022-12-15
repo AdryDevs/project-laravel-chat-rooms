@@ -39,12 +39,3 @@ Route::group([
 ], function () {
     Route::post('/add_super_admin_role/{id}', [UserController::class, 'addSuperAdminRoleByIdUser']);
 });
-
-// BOOKS
-Route::group([
-    'middleware' => ['jwt.auth']
-], function () {
-    Route::post('/books', [BookController::class, 'createBook']);
-    Route::put('/books/{id}', [BookController::class, 'updateBook']);
-    Route::get('/books', [BookController::class, 'getAllBooks']);
-});
