@@ -21,16 +21,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+// AUTH
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
-// AUTH
-Route::group([
-    'middleware' => 'jwt.auth'
-], function () {
-    // Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'profile']);
-});
+Route::post('/logout', [AuthController::class, 'logout']);
 
 
 // USERS
@@ -39,3 +33,12 @@ Route::group([
 ], function () {
     Route::post('/add_super_admin_role/{id}', [UserController::class, 'addSuperAdminRoleByIdUser']);
 });
+
+
+// ROOMS
+
+Route::middleware('auth:sanctum')->get('/chat/rooms', [RoomController::class, 'rooms']);
+Route::middleware('auth:sanctum')->get('/chat/rooms/{room_id}/messages', [RoomController::class, 'messages']);
+Route::middleware('auth:sanctum')->post('/chat/rooms/{room_id}/messages', [RoomController::class, 'newMessage']);
+
+

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
+Route::middleware('auth:sanctum')->get('/chat/rooms', [RoomController::class, 'rooms']);
+Route::middleware('auth:sanctum')->get('/chat/rooms/{room_id}/messages', [RoomController::class, 'messages']);
+Route::middleware('auth:sanctum')->post('/chat/rooms/{room_id}/messages', [RoomController::class, 'newMessage']);
+
+Route::get ('/messages'. [RoomController::class, 'getMessages']);
+Route::post ('/messages'. [RoomController::class, 'newMessage']);
